@@ -1,0 +1,7 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform/tfplan
+terraform/kubectl

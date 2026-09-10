@@ -1,0 +1,88 @@
+pipeline{
+    agent any
+    tools{
+        jdk 'jdk17'
+        nodejs 'node20'
+    }
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+        DOCKER_IMAGE='notharshhaa/chatbot-ui'
+        IMAGE_TAG="${BUILD_NUMBER}"
+    }
+    stages {
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'master', url: 'https://github.com/devcloudninjas/DevOps-Projects/DevOps-Project-28/Chatbot-UI.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm ci"
+            }
+        }
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot \
+                    -Dsonar.projectKey=Chatbot '''
+                }
+            }
+        }
+        stage("quality gate"){
+           steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
+                }
+            } 
+        }
+        stage('OWASP FS SCAN') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.json"
+            }
+        }
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                       sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} ."
+                       sh "docker push ${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image ${DOCKER_IMAGE}:${IMAGE_TAG} > trivy.json"
+            }
+        }
+        stage ("Remove container") {
+            steps{
+                sh "docker stop chatbot | true"
+                sh "docker rm chatbot | true"
+             }
+        }
+        stage('Deploy to container'){
+            steps{
+                sh 'docker run -d --name chatbot -p 3000:3000 -e ALLOW_SERVER_OPENAI_API_KEY=false ${DOCKER_IMAGE}:${IMAGE_TAG}'
+            }
+        }
+        stage('Deploy to kubernetes'){
+            steps{
+                withAWS(credentials: 'aws-key', region: 'us-east-1'){
+                script{
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                       sh 'sed -i "s|image: .*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" k8s/chatbot-ui.yaml'
+                       sh 'kubectl apply -f k8s/chatbot-ui.yaml'
+                  }
+                }
+            }
+        }
+        }
+    }
+    }
