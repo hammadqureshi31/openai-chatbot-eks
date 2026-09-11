@@ -38,9 +38,14 @@ pipeline {
 	}
 	stage('OWASP Dependency-Check') {
 	    steps {
-		dir('Chatbot-UI'){
-		    dependencyCheck additionalArguments: '--scan . --format XML --format HTML --exclude node_modules/** --exclude .next/**', odcInstallation: 'OWASP'
-		}
+		withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
+            	    dir('Chatbot-UI') {
+                        dependencyCheck(
+                            additionalArguments: "--scan . --format XML --format HTML --exclude node_modules/** --exclude .next/** --nvdApiKey ${NVD_API_KEY}",
+                            odcInstallation: 'OWASP'
+                	)
+            	    }
+        	}
 	    }
 	}
     }
