@@ -10,8 +10,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('Chatbot-UI')
+                dir('Chatbot-UI') {
                     sh 'npm ci'
+                }
             }
         }
 
