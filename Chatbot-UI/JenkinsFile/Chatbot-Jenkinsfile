@@ -48,5 +48,17 @@ pipeline {
         	}
 	    }
 	}
+	stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.json"
+            }
+        }
+	stage('Trivy Filesystem Scan') {
+    	    steps {
+        	dir('Chatbot-UI') {
+            	    sh 'trivy --version'
+        	}
+    	    }
+	}
     }
 }
