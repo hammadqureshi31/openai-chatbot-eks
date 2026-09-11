@@ -19,11 +19,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('openai-sonarqube') {
-                    sh '''
-                        sonar-scanner \
-                          -Dsonar.projectKey=openai-chatbot \
-                          -Dsonar.projectName="OpenAI Chatbot"
-                    '''
+                    script {
+                        def scannerHome = tool 'sonar-scanner'
+
+                        dir('Chatbot-UI') {
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                    }
                 }
             }
         }
