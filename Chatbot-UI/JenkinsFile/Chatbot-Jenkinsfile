@@ -61,5 +61,16 @@ pipeline {
         	}
     	    }
 	}
+	stage('Docker Build') {
+    	    steps {
+        	dir('Chatbot-UI') {
+            	    sh '''
+                	docker build \
+                    	  -t chatbot-ui:${BUILD_NUMBER} \
+                    	  .
+            	    '''
+        	}
+    	    }
+	}
     }
 }
