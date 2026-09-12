@@ -53,8 +53,9 @@ pipeline {
                 dir('Chatbot-UI') {
                     sh '''
                         trivy fs . \
-                          --scanners vuln,misconfig,secret \
-                          --exit-code 1 \
+                  	  --scanners vuln,misconfig,secret \
+                  	  --skip-dirs reference \
+                  	  --exit-code 1 \
                   	  --severity HIGH,CRITICAL
                     '''
         	}

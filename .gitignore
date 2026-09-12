@@ -5,3 +5,9 @@
 *.tfplan
 terraform/tfplan
 terraform/kubectl
+
+# Node.js
+Chatbot-UI/node_modules/
+
+# Next.js
+Chatbot-UI/.next/

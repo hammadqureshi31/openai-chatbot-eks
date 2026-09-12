@@ -10,7 +10,7 @@ RUN npm ci
 # Build
 FROM dependencies AS build
 COPY . .
-RUN npm run build
+RUN NEXT_PRIVATE_BUILD_WORKER=1 npm run build
 
 # Production
 FROM node:20-alpine AS production

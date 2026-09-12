@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chatbot
+  namespace: chatbot
 spec:
   replicas: 1
   selector:
@@ -29,7 +30,9 @@ spec:
             drop:
             - ALL
           runAsNonRoot: true
-          runAsUser: 1000
+          runAsUser: 10001
+          runAsGroup: 10001
+          readOnlyRootFilesystem: true
         readinessProbe:
           httpGet:  
             path: /api/health
