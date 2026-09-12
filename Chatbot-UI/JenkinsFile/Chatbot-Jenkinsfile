@@ -72,5 +72,17 @@ pipeline {
         	}
     	    }
 	}
+	stage('Trivy Image Scan') {
+   	    steps {
+                sh '''
+              	    trivy image \
+                      --scanners vuln,misconfig,secret \
+                      --severity HIGH,CRITICAL \
+                      --ignorefile trivyignore \
+                      --exit-code 1 \
+                      chatbot-ui:${BUILD_NUMBER}
+                '''
+      	    }
+	}
     }
 }
