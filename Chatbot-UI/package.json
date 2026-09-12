@@ -11,6 +11,11 @@
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
+  "overrides": {
+    "next": {
+      "postcss": "^8.5.18"
+    }
+  },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.2",
     "@tabler/icons-react": "^2.9.0",
@@ -18,9 +23,8 @@
     "i18next": "^22.4.13",
     "i18next-fs-backend": "^2.6.8",
     "katex": "^0.18.7",
-    "next": "13.5.11",
+    "next": "^15.5.25",
     "next-i18next": "^13.2.2",
-    "openai": "^3.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
@@ -28,7 +32,6 @@
     "react-markdown": "^8.0.5",
     "react-syntax-highlighter": "^15.5.0",
     "rehype-katex": "^6.0.2",
-    "rehype-mathjax": "^4.0.2",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
     "uuid": "^9.0.0"
@@ -46,7 +49,7 @@
     "autoprefixer": "^10.4.14",
     "endent": "^2.1.0",
     "eslint": "8.36.0",
-    "eslint-config-next": "13.5.11",
+    "eslint-config-next": "^15.5.25",
     "gpt-3-encoder": "^1.1.4",
     "jsdom": "^21.1.1",
     "postcss": "^8.4.21",
