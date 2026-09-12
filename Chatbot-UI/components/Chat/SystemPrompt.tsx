@@ -74,7 +74,7 @@ export const SystemPrompt: FC<Props> = ({
   };
 
   const parseVariables = (content: string) => {
-    const regex = /{{(.*?)}}/g;
+    const regex = /{{([^{}]*)}}/g;
     const foundVariables = [];
     let match;
 

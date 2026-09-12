@@ -1,7 +1,4 @@
-import {
-  generateRandomString,
-  programmingLanguages,
-} from '@/utils/app/codeblock';
+import { programmingLanguages } from '@/utils/app/codeblock';
 import { IconCheck, IconClipboard, IconDownload } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import { FC, memo, useState } from 'react';
@@ -32,10 +29,7 @@ export const CodeBlock: FC<Props> = memo(({ language, value }) => {
   };
   const downloadAsFile = () => {
     const fileExtension = programmingLanguages[language] || '.file';
-    const suggestedFileName = `file-${generateRandomString(
-      3,
-      true,
-    )}${fileExtension}`;
+    const suggestedFileName = `file${fileExtension}`;
     const fileName = window.prompt(
       t('Enter file name') || '',
       suggestedFileName,

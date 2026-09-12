@@ -6,9 +6,8 @@ export const cleanSourceText = (text: string) => {
     .replace(/ {3,}/g, '  ')
     .replace(/\t/g, '')
     .replace(/[ \t]+\n/g, '\n')
-    .replace(/\n+(\s*\n)*/g, '\n');
+    .replace(/\n+/g, '\n');
 };
-
 const BLOCKED_HOSTS = new Set(['localhost', '0.0.0.0']);
 const MAX_SOURCE_BYTES = 500000;
 

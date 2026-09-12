@@ -181,7 +181,7 @@ export const ChatMessage: FC<Props> = memo(
 
                       return !inline && match ? (
                         <CodeBlock
-                          key={Math.random()}
+                          key={`${match[1]}-${String(children)}`}
                           language={match[1]}
                           value={String(children).replace(/\n$/, '')}
                           {...props}
