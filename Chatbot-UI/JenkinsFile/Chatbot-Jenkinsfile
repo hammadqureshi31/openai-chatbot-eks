@@ -108,39 +108,39 @@ pipeline {
 	}
 	stage('Deploy to EKS') {
     	    steps {
-		dir('Chatbot-UI') {
-        	    withAWS(credentials: 'jenkins-ecr', region: 'eu-north-1') {
-            	    	script {
-                	    try {
-                    	    	sh '''
-                        	    aws eks update-kubeconfig \
-                            	    	--region eu-north-1 \
-                            	    	--name openai-chatbot-eks
+        	dir('Chatbot-UI') {
+            	    withAWS(credentials: 'jenkins-ecr', region: 'eu-north-1') {
+                	script {
+                    	    try {
+                       		sh """
+                            	    aws eks update-kubeconfig \
+                                	--region eu-north-1 \
+                                	--name openai-chatbot-eks
 
-                        	    kubectl apply \
-                            	    	-f k8s/namespace.yaml \
-                            	    	-f k8s/deployment.yaml \
-                            	    	-f k8s/service.yaml
+                            	    sed -i \
+                                        's|image: CHATBOT_IMAGE|image: 574921529429.dkr.ecr.eu-north-1.amazonaws.com/openai-chatbot:${BUILD_NUMBER}|' \
+                                	k8s/deployment.yaml
 
-                        	    kubectl -n chatbot set image deployment/chatbot \
-                            	    	chatbot=574921529429.dkr.ecr.eu-north-1.amazonaws.com/openai-chatbot:${BUILD_NUMBER}
+                            	    kubectl apply \
+                                	-f k8s/deployment.yaml \
+                                	-f k8s/service.yaml
 
-                        	    kubectl -n chatbot rollout status deployment/chatbot --timeout=120s
-                    	    	'''
-                	    } catch (Exception e) {
-                    	    	echo 'Deployment failed. Rolling back...'
+                            	    kubectl -n chatbot rollout status deployment/chatbot --timeout=120s
+                        	"""
+                    	} catch (Exception e) {
+                            echo 'Deployment failed. Rolling back...'
 
-                   	     	sh '''
-                        	    kubectl -n chatbot rollout undo deployment/chatbot
-                        	    kubectl -n chatbot rollout status deployment/chatbot --timeout=120s
-                    	     	'''
+                            sh '''
+                            	kubectl -n chatbot rollout undo deployment/chatbot
+                            	kubectl -n chatbot rollout status deployment/chatbot --timeout=120s
+                            '''
 
-                    	     	throw e
-                	   }
-            	       }
-        	   }
-    	        }
-	    }	
-	}	
-    }
+                            throw e
+                    	}
+                     }
+           	 }
+             }
+         }
+      }
+   }
 }

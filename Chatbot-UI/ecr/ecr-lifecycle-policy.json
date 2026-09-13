@@ -1,0 +1,32 @@
+{
+  "rules": [
+    {
+      "rulePriority": 1,
+      "description": "Delete untagged images after 1 day",
+      "selection": {
+        "tagStatus": "untagged",
+        "countType": "sinceImagePushed",
+        "countUnit": "days",
+        "countNumber": 1
+      },
+      "action": {
+        "type": "expire"
+      }
+    },
+    {
+      "rulePriority": 2,
+      "description": "Keep only the 2 most recent build images",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPatternList": [
+          "*"
+        ],
+        "countType": "imageCountMoreThan",
+        "countNumber": 2
+      },
+      "action": {
+        "type": "expire"
+      }
+    }
+  ]
+}
