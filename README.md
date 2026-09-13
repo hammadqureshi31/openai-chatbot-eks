@@ -1123,25 +1123,65 @@ This confirms that the application was not only deployed successfully at the Kub
 
 ## Project Evidence
 
-The following categories of screenshots provide the strongest visual evidence for the implementation. *(Add image paths under `docs/evidence/` and reference them here as they become available — placeholders are used below so the structure can be populated later.)*
+The following screenshots, captured directly from the running environment, provide visual evidence for each stage of the implementation.
 
-| # | Evidence | What It Proves |
-|---|---|---|
-| 1 | **Jenkins CI/CD Pipeline** — full pipeline run from checkout through EKS deployment | CI/CD automation, security gates, Docker build, ECR push, EKS deployment, rollout verification |
-| 2 | **Trivy Security Scan** — final scan showing `0 vulnerabilities` | Vulnerability remediation, security scanning, pipeline security enforcement |
-| 3 | **Amazon EKS Nodes** — worker nodes in `Ready` state | EKS cluster availability, managed worker nodes, Kubernetes runtime health |
-| 4 | **Live Chatbot Application** — deployed application running | Application availability, successful deployment, functional runtime |
-| 5 | **Least-Privilege RBAC** — Jenkins Kubernetes access model | Namespace-scoped CI/CD permissions, removal of unnecessary cluster-admin access |
-| 6 | **Automatic Rollback** — deliberate deployment failure and recovery | Failure detection, rollout timeout, automatic rollback, recovery verification |
+### 1. Jenkins CI/CD Pipeline
+
+![Jenkins CI/CD Pipeline](docs/evidence/01-jenkins-pipeline.png)
+
+**Proves:** CI/CD automation, security gates, Docker build, ECR push, EKS deployment, rollout verification.
+
+### 2. Trivy Security Scan
+
+![Trivy Security Scan](docs/evidence/02-trivy-scan.png)
+
+**Proves:** Vulnerability remediation (`36 → 0`), security scanning, pipeline security enforcement.
+
+### 3. Amazon EKS Worker Nodes
+
+![Amazon EKS Worker Nodes](docs/evidence/03-eks-nodes.png)
+
+**Proves:** EKS cluster availability, managed worker nodes, Kubernetes runtime health.
+
+### 4. Live Chatbot Application
+
+![Live Chatbot Application](docs/evidence/04-live-application.png)
+
+**Proves:** Application availability, successful deployment, functional runtime.
+
+### 5. Least-Privilege RBAC
+
+Jenkins' namespace-scoped Kubernetes access model — see [Jenkins → EKS Least-Privilege RBAC](#jenkins--eks-least-privilege-rbac) for the full permission breakdown. *(Screenshot not yet captured for this section.)*
+
+**Proves:** Namespace-scoped CI/CD permissions, removal of unnecessary cluster-admin access.
+
+### 6. Automatic Rollback
+
+![Automatic Rollback](docs/evidence/06-rollback.png)
+
+**Proves:** Failure detection, rollout timeout, automatic rollback, recovery verification.
+
+### 7. Amazon EKS Cluster Overview
+
+![Amazon EKS Cluster Overview](docs/evidence/07-eks-cluster.png)
+
+**Proves:** Cluster configuration (`openai-chatbot-eks`, Kubernetes `1.35`), multi-AZ control plane, managed node group status.
+
+### 8. AWS Load Balancer
+
+![AWS Load Balancer](docs/evidence/08-load-balancer.png)
+
+**Proves:** External exposure of the `chatbot-service`, successful `LoadBalancer` provisioning, the path real user traffic takes into the cluster.
 
 ```text
 docs/evidence/
-├── 01-jenkins-pipeline.png        (placeholder)
-├── 02-trivy-scan.png              (placeholder)
-├── 03-eks-nodes.png               (placeholder)
-├── 04-live-application.png        (placeholder)
-├── 05-rbac.png                    (placeholder)
-└── 06-rollback.png                (placeholder)
+├── 01-jenkins-pipeline.png
+├── 02-trivy-scan.png
+├── 03-eks-nodes.png
+├── 04-live-application.png
+├── 06-rollback.png
+├── 07-eks-cluster.png
+└── 08-load-balancer.png
 ```
 
 ---
