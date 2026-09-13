@@ -106,5 +106,21 @@ pipeline {
 		}
     	    }
 	}
+	stage('Deploy to EKS') {
+    	    steps {
+        	withAWS(credentials: 'jenkins-ecr', region: 'eu-north-1') {
+            	    sh '''
+                	aws eks update-kubeconfig \
+                    	    --region eu-north-1 \
+                            --name openai-chatbot-eks
+
+                	kubectl -n chatbot set image deployment/chatbot \
+                    	    chatbot=574921529429.dkr.ecr.eu-north-1.amazonaws.com/openai-chatbot:${BUILD_NUMBER}
+
+                	kubectl -n chatbot rollout status deployment/chatbot
+            	    '''
+        	}
+    	    }
+	}
     }
 }
