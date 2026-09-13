@@ -113,6 +113,11 @@ pipeline {
                 	aws eks update-kubeconfig \
                     	    --region eu-north-1 \
                             --name openai-chatbot-eks
+			
+			kubectl apply \
+                    	    -f k8s/namespace.yaml \
+                    	    -f k8s/deployment.yaml \
+                    	    -f k8s/service.yaml
 
                 	kubectl -n chatbot set image deployment/chatbot \
                     	    chatbot=574921529429.dkr.ecr.eu-north-1.amazonaws.com/openai-chatbot:${BUILD_NUMBER}
