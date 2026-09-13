@@ -108,23 +108,25 @@ pipeline {
 	}
 	stage('Deploy to EKS') {
     	    steps {
-        	withAWS(credentials: 'jenkins-ecr', region: 'eu-north-1') {
-            	    sh '''
-                	aws eks update-kubeconfig \
-                    	    --region eu-north-1 \
-                            --name openai-chatbot-eks
+		dir('Chatbot-UI') {
+        	    withAWS(credentials: 'jenkins-ecr', region: 'eu-north-1') {
+            	    	sh '''
+                	    aws eks update-kubeconfig \
+                    	    	--region eu-north-1 \
+                            	--name openai-chatbot-eks
 			
-			kubectl apply \
-                    	    -f k8s/namespace.yaml \
-                    	    -f k8s/deployment.yaml \
-                    	    -f k8s/service.yaml
+			    kubectl apply \
+                    	    	-f k8s/namespace.yaml \
+                    	    	-f k8s/deployment.yaml \
+                    	    	-f k8s/service.yaml
 
-                	kubectl -n chatbot set image deployment/chatbot \
-                    	    chatbot=574921529429.dkr.ecr.eu-north-1.amazonaws.com/openai-chatbot:${BUILD_NUMBER}
+                	    kubectl -n chatbot set image deployment/chatbot \
+                    	    	chatbot=574921529429.dkr.ecr.eu-north-1.amazonaws.com/openai-chatbot:${BUILD_NUMBER}
 
-                	kubectl -n chatbot rollout status deployment/chatbot
-            	    '''
-        	}
+                	    kubectl -n chatbot rollout status deployment/chatbot
+            	    	'''
+        	    }
+		}
     	    }
 	}
     }
