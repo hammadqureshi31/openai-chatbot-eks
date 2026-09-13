@@ -8,7 +8,7 @@ module "eks" {
   endpoint_public_access  = true
   endpoint_private_access = true
 
-  endpoint_public_access_cidrs = ["182.189.94.218/32"]
+  endpoint_public_access_cidrs = ["182.189.97.241/32"]
 
   enable_cluster_creator_admin_permissions = true
 
